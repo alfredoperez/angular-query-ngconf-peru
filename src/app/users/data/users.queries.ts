@@ -60,12 +60,10 @@ function prefetchNextPageQuery(requestOptions: Signal<RequestOptions>) {
 }
 
 function detailsQuery(id: Signal<User['id']>) {
-  const targetId = id();
-  if (!targetId || targetId === '') {
-    return;
-  }
   const usersApi = inject(UsersApiService);
+
   return injectQuery(() => ({
+    enabled: () => id() !== '',
     queryKey: queryKeys.details(id()),
     queryFn: () => usersApi.fetchById(id()),
     ...queryOptions,

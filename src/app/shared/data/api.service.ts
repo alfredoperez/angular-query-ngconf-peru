@@ -16,12 +16,10 @@ export abstract class ApiService<T> {
       observe: 'response',
     });
 
-    const mappedResponse = this.mapListResponse(
+    return this.mapListResponse(
       result as unknown as HttpResponse<T>,
       requestOptions?.pagination,
     );
-
-    return mappedResponse;
   }
 
   public fetchById(
@@ -63,7 +61,7 @@ export abstract class ApiService<T> {
     const options = this.getOptions(requestOptions, body);
 
     return lastValueFrom(
-      this.#httpClient.request(method, url, options).pipe(delay(1000)),
+      this.#httpClient.request(method, url, options).pipe(delay(10)),
     );
   }
 
@@ -80,7 +78,8 @@ export abstract class ApiService<T> {
       const paginationParams = {
         _limit: limit?.toString(),
         _page: (page ? page : 0).toString(),
-        _sort: `${orderDirection === 'ASC' ? '' : '-'}${orderBy}`,
+        _sort: `${orderBy}`,
+        _order: orderDirection?.toLocaleLowerCase(),
       };
 
       params = { ...paginationParams };

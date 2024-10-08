@@ -31,10 +31,9 @@ export const DataViewerStore = signalStore(
     page: computed(() => pagination().page),
     requestOptions: computed(() => {
       return {
-        // searchQuery: searchQuery(),
         pagination: pagination(),
-        orderBy: 'age',
-        orderDirection: 'ASC',
+        orderBy: 'createdAt',
+        orderDirection: 'DESC',
       } as RequestOptions;
     }),
   })),

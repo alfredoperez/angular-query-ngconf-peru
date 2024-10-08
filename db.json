@@ -1371,11 +1371,15 @@
       "age": 25
     },
     {
-      "name": "asd",
-      "age": 21,
-      "createdAt": "2024-06-02T22:47:50.799Z",
-      "updatedAt": "2024-06-02T22:54:20.346Z",
-      "id": "NkTQ8XD"
+      "name": "Alfredo  Perez",
+      "age": 34,
+      "email": "alfredo.perez.q@gmail.com",
+      "company": "Peru",
+      "title": "s",
+      "department": "d",
+      "createdAt": "2024-10-08T23:19:00.869Z",
+      "updatedAt": "2024-10-08T23:19:00.869Z",
+      "id": "QOZA0nY"
     }
   ]
 }
