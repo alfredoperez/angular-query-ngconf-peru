@@ -3,6 +3,7 @@ import { inject } from '@angular/core';
 import { delay, lastValueFrom } from 'rxjs';
 import { ListResponse, Pagination, RequestOptions } from './api.models';
 
+const DELAY = 1000;
 export abstract class ApiService<T> {
   #httpClient = inject(HttpClient);
 
@@ -61,7 +62,7 @@ export abstract class ApiService<T> {
     const options = this.getOptions(requestOptions, body);
 
     return lastValueFrom(
-      this.#httpClient.request(method, url, options).pipe(delay(10)),
+      this.#httpClient.request(method, url, options).pipe(delay(DELAY)),
     );
   }
 

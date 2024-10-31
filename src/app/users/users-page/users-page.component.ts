@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, effect, inject } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 import { AgGridModule } from 'ag-grid-angular';
@@ -39,13 +39,13 @@ import { DataViewerStore } from '../../shared/state';
           <p>Loading</p>
         }
         @if (usersQuery.isSuccess()) {
-          <div>
+          <div [style.opacity]="usersQuery.isPlaceholderData() ? 0.5 : 1">
             <ag-grid-angular
               class="ag-theme-alpine border-round"
               [rowData]="users()"
               [columnDefs]="columnDefs"
               (rowClicked)="onEditUser($event)"
-              style="width: 100%; height: 500px; max-width: 1000px"
+              style="width: 100%; height: 300px; max-width: 1000px"
             />
 
             <mat-paginator
@@ -67,14 +67,27 @@ import { DataViewerStore } from '../../shared/state';
   `,
 })
 export class UsersPageComponent {
-  protected readonly columnDefs = columnDefs;
+  #router = inject(Router);
   #modalService = inject(ModalService);
   #store = inject(DataViewerStore);
+
   usersQuery = usersQuery.page(this.#store.requestOptions);
   users = computed(() => this.usersQuery.data()?.items || ([] as Array<User>));
   totalItems = computed(() => this.usersQuery.data()?.total || 0);
-  #router = inject(Router);
+  protected readonly columnDefs = columnDefs;
 
+  prefetchNextPage = usersQuery.prefetchNextPage(this.#store.requestOptions);
+
+  constructor() {
+    effect(() => {
+      if (
+        !this.usersQuery.isPlaceholderData() &&
+        this.usersQuery.data()?.hasMore
+      ) {
+        this.prefetchNextPage.prefetch();
+      }
+    });
+  }
   onAddUser() {
     this.#modalService.open(AddUserModalComponent, DefaultOptions);
   }
